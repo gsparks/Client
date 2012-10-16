@@ -9,18 +9,24 @@
 
 #define MAXBUFFER	512
 
-static char Server[] = "127.0.0.1";
-
 /* To do */
-//XML as input to command line ---> ✓
-//Server location as option, default to localhost
-//XML validation
-//web wrapper with icons and pretty stuff
-//Actually format XML response
-//recognize Airport code vs lat/lon vs City code (google api? lat/lon)
+// XML as input to command line ---> ✓
+// Server location as option, default to localhost ---> ✓
+// XML validation
+// web wrapper with icons and pretty stuff ---> (in progress)
+// Actually format XML response
+// recognize Airport code vs lat/lon vs City code (google api? lat/lon)
 
 /* Test Request */
-//static char Request[] = "<wwxtp><query><command>TEST</command><id>IZA</id></query></wwxtp>";
+// static char Request[] = "<wwxtp><query><command>TEST</command><id>IZA</id></query></wwxtp>";
+
+/* Instructions */
+// Compile : gcc client.c -lgc -o client (must have lgc installed)
+// Run : ./client <xml_request> <server>
+// The first argument to the program is the formatted xml request and the second in the server represented as a dotted quad.
+// If no server is specified the program will default to localhost.
+
+char Server[30] = { 0 };              
 
 int main(int argc, char *argv[])
 {
@@ -30,8 +36,14 @@ int main(int argc, char *argv[])
 	char buffer[MAXBUFFER];
 	
 	/* Process input */
-	char Request[500] = { 0 };	//Reserve Request (Greg)
-	strncpy(Request, argv[1], sizeof(Request) - 1);    //Convert pointer => string and place in Request (Greg)
+	char Request[500] = { 0 };                            // Reserve Request (Greg)
+	strncpy(Request, argv[1], sizeof(Request) - 1);       // Convert pointer => string and place in Request (Greg)
+	if(argc < 3)  
+		strncpy(Server, "127.0.0.1", sizeof(Server) - 1); // If no server option specified, use localhost (Greg)
+	else if(argc == 3)
+		strncpy(Server, argv[2], sizeof(Server) - 1);     // Otherwise use specified server (Greg)
+	else
+		printf("Warning: Too many arguments given.  Expecting 2, given %d.\n", argc); // Display warning if wrong number of arguments given (Greg)
 
 	/* Create socket */
 	printf("creating socket...\n");	
